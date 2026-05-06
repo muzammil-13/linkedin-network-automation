@@ -6,6 +6,20 @@ Built for situations where dozens of people share their LinkedIn profiles in com
 
 ---
 
+## 📸 Screenshots
+
+### Main Tracking Dashboard
+
+![Main Dashboard](assets/dashboard.png)
+
+### Batch Opening Controls
+
+![Open Queue Tab](assets/open-queue.png)
+
+### CLI Usage
+
+![Terminal Snippet](assets/cli_output.png)
+
 ## Problem
 
 In active WhatsApp communities, many members share their LinkedIn profile URLs during introductions.
@@ -38,7 +52,8 @@ The tool:
 * extracts LinkedIn profile URLs from exported WhatsApp chats
 * removes duplicates
 * stores profiles in CSV format
-* opens profiles automatically in browser one by one
+* offers a Streamlit GUI for drag-and-drop chat imports
+* opens selected profiles in browser batches with manual safety controls
 
 ### Manual steps intentionally kept manual
 
@@ -72,6 +87,8 @@ This avoids violating platform automation policies and keeps networking personal
 * Regex (`re`)
 * CSV handling
 * Webbrowser module
+* Streamlit
+* Pandas
 
 ---
 
@@ -100,6 +117,8 @@ linkedin-network-automation/
 │
 ├── extract_links.py
 ├── open_profiles.py
+├── app.py
+├── requirements.txt
 ├── linkedin_profiles.csv      # generated, ignored by Git
 ├── README.md
 └── sample_chat.example.txt    # optional sample input
@@ -117,9 +136,49 @@ git clone https://github.com/yourusername/linkedin-network-automation.git
 cd linkedin-network-automation
 ```
 
+Install dependencies for the Streamlit GUI:
+
+```bash
+pip install -r requirements.txt
+```
+
 ---
 
 ## Usage
+
+### Option A: Streamlit GUI
+
+Run:
+
+```bash
+streamlit run app.py
+```
+
+The GUI supports:
+
+* drag-and-drop WhatsApp `.txt` chat export
+* upload an existing `linkedin_profiles.csv` to resume tracking
+* editable status and note columns
+* CSV download
+* local CSV save
+* filtered browser opening by status
+* interval and profile-count controls
+* safety warning before opening profiles automatically
+
+Important: the app only opens profile pages. Sending LinkedIn connection requests stays manual and personalized.
+
+LinkedIn does not publish a fixed daily personal connection limit. Their help pages say accounts can be restricted after sending many invitations in a short time, receiving too many ignored or spam-marked invites, or using automation tools. Basic/free members also have a limited number of personalized connection messages per month.
+
+Suggested usage:
+
+```text
+Open 5-10 profiles per session
+Use 10-20 seconds between profile opens
+Send connection requests manually
+Mark rows as connected, skipped, or follow-up in the CSV
+```
+
+### Option B: CLI
 
 ### Step 1: Export WhatsApp Chat
 
@@ -197,6 +256,21 @@ Recommended status values:
 
 ---
 
+## GUI Feature Branch Ideas
+
+Useful ideas for the `gui-streamlit` branch:
+
+* Batch presets for light networking, event follow-up, and deep review sessions
+* Duplicate insights showing repeated links and where they appeared in the chat
+* CSV merge to combine new chat exports with an older tracking sheet
+* Daily session log to count opened profiles per day
+* Search and filters by status, notes, and profile slug
+* One-profile-at-a-time review mode with a Next button
+* Personalized note draft templates based on manually entered context
+* Follow-up statuses such as `replied`, `follow_up`, and `not_relevant`
+
+---
+
 ## Example Use Cases
 
 * AI communities
@@ -225,7 +299,7 @@ So I vibe-coded this lightweight automation tool using Python.
 
 ## Future Improvements
 
-* GUI with Streamlit
+* GUI with Streamlit ✅
 * Auto-tagging profiles by role/company
 * CRM-style connection tracker
 * AI-generated personalized connection notes

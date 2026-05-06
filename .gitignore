@@ -1,3 +1,6 @@
 WhatsAppChatwithAIKeralamCommunity-6may26_9.25am.txt
 linkedin_profiles.csv
 __pycache__
+streamlit.*.log
+.venv
+assets/cli_snippet.txt
