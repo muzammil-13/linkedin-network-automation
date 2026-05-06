@@ -54,9 +54,12 @@ This avoids violating platform automation policies and keeps networking personal
 ## Features
 
 * Extract LinkedIn profile URLs from WhatsApp exported `.txt` chat
-* Deduplicate repeated URLs
+* Normalize and deduplicate repeated URLs
 * Generate clean CSV tracking sheet
-* Auto-open profiles sequentially in browser
+* Auto-open pending profiles sequentially in browser
+* Limit each opening session and configure delay between profiles
+* Update opened profiles from `pending` to `opened`
+* Dry-run mode for previewing links before opening the browser
 * Lightweight and beginner-friendly
 * No APIs required
 * No browser automation frameworks required
@@ -97,9 +100,9 @@ linkedin-network-automation/
 │
 ├── extract_links.py
 ├── open_profiles.py
-├── linkedin_profiles.csv
+├── linkedin_profiles.csv      # generated, ignored by Git
 ├── README.md
-└── sample_chat.txt
+└── sample_chat.example.txt    # optional sample input
 ```
 
 ---
@@ -126,7 +129,7 @@ From WhatsApp:
 Group → More → Export Chat → Without Media
 ```
 
-Place the exported `.txt` file inside the project folder.
+Place the exported `.txt` file inside the project folder, or pass its full path to the extractor.
 
 ---
 
@@ -135,7 +138,13 @@ Place the exported `.txt` file inside the project folder.
 Run:
 
 ```bash
-python extract_links.py
+python extract_links.py WhatsAppChat.txt
+```
+
+To choose a custom output file:
+
+```bash
+python extract_links.py WhatsAppChat.txt --output linkedin_profiles.csv
 ```
 
 Output:
@@ -154,13 +163,37 @@ Run:
 python open_profiles.py
 ```
 
-The script opens LinkedIn profiles one by one in your browser.
+The script opens `pending` LinkedIn profiles one by one in your browser and marks opened rows as `opened`.
+
+Useful options:
+
+```bash
+python open_profiles.py --limit 10 --delay 8
+python open_profiles.py --csv linkedin_profiles.csv --limit 5
+python open_profiles.py --dry-run
+```
 
 You manually:
 
 * review profile
 * personalize note
 * send request
+* optionally update the CSV status to `connected` or `skipped`
+
+### CSV Status Values
+
+The generated CSV includes:
+
+```csv
+linkedin_url,status,note
+```
+
+Recommended status values:
+
+* `pending` → not opened yet
+* `opened` → opened in browser
+* `connected` → connection request sent manually
+* `skipped` → intentionally ignored
 
 ---
 
